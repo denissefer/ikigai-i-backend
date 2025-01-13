@@ -5,17 +5,24 @@ import styles from "./FirstScreen.module.css";
 function FirstScreen() {
   const navigate = useNavigate();
 
-  const array = ["i", "k", "i", "g", "a", "i"];
+  const array = [
+    { char: "i", style: { top: "10%", left: "40%" } },
+    { char: "k", style: { top: "20%", left: "60%" } },
+    { char: "i", style: { top: "30%", left: "40%" } },
+    { char: "g", style: { top: "40%", left: "60%" } },
+    { char: "a", style: { top: "50%", left: "40%" } },
+    { char: "i", style: { top: "60%", left: "60%" } },
+  ];
   //{ char: "i", style: { top: "10%", left: "50%" } },
 
 
-  //   useEffect(() => {
-  //    const timer = setTimeout(()=>{
-  //     navigate("/welcome")
-  //    }, array.length * 500 + 1000)
+    useEffect(() => {
+     const timer = setTimeout(()=>{
+      navigate("/welcome")
+     }, array.length * 500 + 1000)
 
-  //    return () => clearTimeout(timer)
-  //   }, [array.length, navigate]);
+     return () => clearTimeout(timer)
+    }, [array.length, navigate]);
 
   return (
     <div>
@@ -28,7 +35,7 @@ function FirstScreen() {
             animationDelay: `${index * 500}ms`
           }}
         >
-          {element}
+          {element.char}
         </span>
       ))}
     </div>
