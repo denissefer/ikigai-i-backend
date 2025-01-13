@@ -1,5 +1,4 @@
 import React from "react";
-import Signupbutton from '../components/signupButton';
 import { useNavigate } from "react-router-dom";
 
 function Signup() {
@@ -11,7 +10,7 @@ function Signup() {
             <h2>Name</h2>
             <h2>Email</h2>
             <h2>Password</h2>
-            <Signupbutton> onClick={() => navigate("./Congratulations.jsx")}</Signupbutton>
+            <button onClick={() => navigate("./Congratulations.jsx")}>Sign up</button>
             <h3>Thank you for signing up with us!</h3>
         </div>
     )

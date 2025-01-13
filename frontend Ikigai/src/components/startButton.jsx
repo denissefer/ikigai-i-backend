@@ -1,8 +1,11 @@
-function Startbutton() {
+import React from 'react';
 
-    return <div className="startButton">
-        <button>Start</button>
-    </div>
-
-
+function StartButton({ onClick }) {
+    return (
+        <button type="button" onClick={onClick}>
+            Start
+        </button>
+    );
 }
+
+export default StartButton;

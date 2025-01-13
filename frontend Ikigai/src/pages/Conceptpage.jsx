@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Continuebutton from "../components/continueButton";
+
 
 function Conceptpage() {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ function Conceptpage() {
             <h2>and what you can be paid for.</h2>
             <br />
             <h2>Finding your ikigai brings purpose, fulfillment and balance to life, blending passion, mission, vocation and profession into a harmonious existence</h2>
-            <Continuebutton onClick={() => navigate("/login")} />
+            <button onClick={() => navigate("/login.jsx")} >Continue </button>
         </div>
     );
 }

@@ -6,3 +6,4 @@ function Loginbutton() {
 
 
 }
+export default Loginbutton;

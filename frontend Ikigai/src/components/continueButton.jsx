@@ -4,3 +4,4 @@ function Continuebutton () {
     </div>
 
 }
+export default Continuebutton;

@@ -5,4 +5,4 @@ function Signupbutton() {
     </div>
 
 
-}
+}export default Signupbutton;
