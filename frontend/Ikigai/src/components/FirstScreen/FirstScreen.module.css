@@ -1,9 +1,14 @@
+
+body {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
 .container {
     position: relative;
     width: 100vw;
     height: 100vh;
     background-color: white; /* Or any background you prefer */
     overflow: hidden;
+    
   }
   
   .letter {
@@ -25,7 +30,7 @@
     }
   }
   
-  @keyframes dissolve {
+  /* @keyframes dissolve {
     0% {
       opacity: 1;
       transform: scale(1);
@@ -35,5 +40,5 @@
       transform: scale(1.5) rotate(15deg);
       filter: blur(10px);
     }
-  }
+  } */
   
