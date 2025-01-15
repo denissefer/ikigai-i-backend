@@ -3,11 +3,13 @@ const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const cors = require('cors'); // Import cors
 require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors({ origin: 'http://localhost:5176', methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
 app.use(bodyParser.json());
 
 // Connect to MySQL
@@ -45,7 +47,7 @@ app.post('/register', async (req, res) => {
 
     // Insert the new user into the database
     const [result] = await db.query(
-      'INSERT INTO users (id, username, email, password_hash) VALUES (UUID(), ?, ?, ?)',
+      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
       [username, email, passwordHash]
     );
 
@@ -58,19 +60,22 @@ app.post('/register', async (req, res) => {
 
 // Login route
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  // Validate that username and password are provided
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required.' });
+  // Validate that email and password are provided
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
   }
 
   try {
     // Find user in the database
-    const [rows] = await db.query('SELECT id, username, email, password_hash FROM users WHERE username = ?', [username]);
+    const [rows] = await db.query(
+      'SELECT id, username, email, password_hash FROM users WHERE email = ?',
+      [email]  // Changed 'username' to 'email'
+    );
 
     if (rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid username or password.' });
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
     const user = rows[0];
@@ -79,19 +84,19 @@ app.post('/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid username or password.' });
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
     // Generate JWT token
     const token = jwt.sign(
       { id: user.id, username: user.username },
-      process.env.JWT_SECRET, // Use the secret key from .env
+      process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
     res.json({
       message: 'Login successful.',
-      token
+      token,
     });
   } catch (err) {
     console.error('Error logging in user:', err);
