@@ -6,12 +6,12 @@ function FirstScreen() {
   const navigate = useNavigate();
 
   const array = [
-    { char: "i", style: { top: "10%", left: "40%" } },
+    { char: "i", style: { top: "10%", left: "50%" } },
     { char: "k", style: { top: "20%", left: "60%" } },
-    { char: "i", style: { top: "30%", left: "40%" } },
-    { char: "g", style: { top: "40%", left: "60%" } },
+    { char: "i", style: { top: "30%", left: "50%" } },
+    { char: "g", style: { top: "40%", left: "50%" } },
     { char: "a", style: { top: "50%", left: "40%" } },
-    { char: "i", style: { top: "60%", left: "60%" } },
+    { char: "i", style: { top: "60%", left: "50%" } },
   ];
   //{ char: "i", style: { top: "10%", left: "50%" } },
 

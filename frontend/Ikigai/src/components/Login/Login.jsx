@@ -1,31 +1,55 @@
 import React from "react";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import styles from "./Login.module.css"; // Importing CSS module
 
-function Login (){
-    const navigate = useNavigate();
-    return(
-        <div>
-            <div className="login">
-                <h4>Ikiga-i</h4>
-                <h1>Log in</h1>
-                <span>email</span> <br />
-                <input className="email" type="text" /> <br />
-                <span>password</span> <br />
-                <input className="password" type="text" /> <br />
-                <button onClick={()=>navigate("/congratulations")}>log in</button>
-            </div>
-            <div className="alternative">
-                <img src="" alt="left-line" />
-                <p>or</p>
-                <img src="" alt="right-line" />
-            </div>
-            <div className="sign-up">
-                <button className="sign-up" id="sign-up" onClick={() => navigate("/sign-up")}>sign up</button>
-            </div>
+function Login() {
+  const navigate = useNavigate();
 
-            
-        </div>
-    )
+  const handleLogin = (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    // Handle login logic here (e.g., form validation, API calls)
+    navigate("/explore"); // Navigate to the explore page after successful login
+  };
+
+  return (
+    <div>
+      <div className="login">
+        <h4>Ikiga-i</h4>
+        <h1>Log in</h1>
+        <br />
+        <form onSubmit={handleLogin}>
+          <label htmlFor="email">Email</label> <br />
+          <input
+            id="email"
+            className={styles.email}
+            type="text"
+            placeholder="Enter your email"
+          />{" "}
+          <br />
+          <br />
+          <label htmlFor="password">Password</label> <br />
+          <input
+            id="password"
+            className={styles.password}
+            type="password"
+            placeholder="Enter your password"
+          />{" "}
+          <br />
+          <br />
+          <button type="submit">Log In</button> <br />
+        </form>
+      </div>
+      <div className={styles.alternative}>
+        <img src="" alt={styles.leftLine} />
+        <p>or</p>
+        <img src="" alt={styles.rightLine} />
+      </div>
+      <div className={styles.signUp}>
+        <button className={styles.signUp} onClick={() => navigate("/signup")}>Sign Up</button>{" "}<br />
+        <p className={styles.createAccount}>to create an account</p>
+      </div>
+    </div>
+  );
 }
 
-export default Login
+export default Login;

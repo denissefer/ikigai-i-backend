@@ -8,12 +8,12 @@ function Welcome (){
 
     return(
         <div className={styles.container}>
-            <h4 className={styles.title}>Ikiga-i</h4>
             <div className={styles.frame}>
-                {/* <div className={styles.top-branch}><img src="" alt="top-branch" /></div> */}
+                <h4 className={styles.title}>Ikiga-i</h4>
+                <p className={styles.p}>old values - new lifestyle</p>
+                {/* <div className={styles.logo}><img src="" alt="logo" /></div> */}
                 <h1 className={styles.subtitle}>Welcome to your ikigai journey</h1>
-                <button className={styles.startButton} onClick={()=> navigate('/ikigaiDescription')}>start</button>
-                {/* <div className={styles.lower-branch}><img src="" alt="lower-branch" /></div> */}
+                <button className={styles.startButton} onClick={()=> navigate('/ikigaiDescription')}>get started</button>
             </div>
             <div className={styles.team}>DEVELOPED BY TEAM ZEN</div>
         </div>

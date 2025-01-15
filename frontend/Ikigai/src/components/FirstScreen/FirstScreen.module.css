@@ -12,6 +12,7 @@ body {
   }
   
   .letter {
+    font-size: 100px;
     position: absolute;
     font-size: 2rem;
     color: black;
@@ -29,16 +30,4 @@ body {
       transform: translateY(0);
     }
   }
-  
-  /* @keyframes dissolve {
-    0% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.5) rotate(15deg);
-      filter: blur(10px);
-    }
-  } */
   
