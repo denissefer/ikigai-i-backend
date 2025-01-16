@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `concepts`
+--
+
+DROP TABLE IF EXISTS `concepts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `concepts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `concept_name` varchar(100) NOT NULL,
+  `definition` text NOT NULL,
+  `image_url` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `concepts`
+--
+
+LOCK TABLES `concepts` WRITE;
+/*!40000 ALTER TABLE `concepts` DISABLE KEYS */;
+INSERT INTO `concepts` VALUES (1,'Kanso','Embrace simplicity in both your environment and mindset. Avoid clutter.','images/kanso.jpg'),(2,'Fukinsei','Find beauty in imperfection and imbalance. Life isn’t about perfection.','images/fukinsei.jpg'),(3,'Shibumi','Appreciate understated elegance rather than loudness or excess.','images/shibumi.jpg'),(4,'Seijaku','Prioritize calmness and solitude in your daily life. Create moments of stillness.','images/seijaku.jpg'),(5,'Yugen','Recognize the mysterious and subtle aspects of life. Appreciate beauty that transcends explanation.','images/yugen.jpg');
+/*!40000 ALTER TABLE `concepts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -23,7 +49,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id` char(36) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
@@ -33,7 +59,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +68,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Denis Sefer','seferdenis01@gmail.com','$2a$10$SO3XC2UHdnP9F/BZesN0ROpasZNTMveFMTOYGKLpICEZdPqakVGDa',NULL,'2025-01-15 15:20:43','2025-01-15 15:20:43');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-13 12:55:37
+-- Dump completed on 2025-01-16 12:10:41
