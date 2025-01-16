@@ -1,28 +1,49 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./Welcome.module.css";
+import LogoImage from "../images/logo.svg";
 
-
-function Welcome (){
+function Welcome() {
     const navigate = useNavigate();
 
-    return(
-        
-        <div className={styles.container}>
-            
-            <div className={styles.frame}>
-                <h4 className={styles.title + " font-tsukimi font-bold text-8xl"}>Ikiga-i</h4>
-                <p className={styles.p + " font-gotu"}>old values - new lifestyle</p>
-                {/* <div className={styles.top-branch}><img src="" alt="top-branch" /></div> */}
-                <h1 className={styles.subtitle + " font-gotu"}>Welcome to your ikigai journey</h1>
-                <button className={styles.startButton + " font-gotu px-6 py-3 bg-gray-300 rounded-md hover:bg-gray-500 transition duration-300"} onClick={()=> navigate('/ikigaiDescription')}>get started</button>
-                {/* <div className={styles.lower-branch}><img src="" alt="lower-branch" /></div> */}
+    return (
+        <div className="min-h-screen flex flex-col justify-center items-center px-4 m-20">
+            {/* Main Content */}
+            <div className="text-center space-y-12">
+                <h4 className="font-tsukimi text-4xl text-gray-800">
+                    Ikiga-i
+                </h4>
+
+                <p className="font-gotu text-2xl text-gray-500 pt-2 pb-2">
+                    old values - new lifestyle
+                </p>
+
+                <div className="flex justify-center">
+                    <img
+                        src={LogoImage}
+                        alt="logo-image"
+                        className="w-24 h-24 object-contain"
+                    />
+                </div>
+
+                <h1 className="font-gotu text-4xl text-gray-800 p-5 pb-8">
+                    Welcome to your ikigai journey
+                </h1>
+
+                <button
+                    className="font-gotu px-8 py-2 bg-gray-300 rounded-xl hover:bg-gray-500 hover:text-white transition duration-300"
+                    onClick={() => navigate("/ikigaiDescription")}
+                >
+                    Get Started
+                </button>
             </div>
-            <div className={styles.team + " font-gotu"}>DEVELOPED BY TEAM ZEN</div>
+
+            {/* Footer */}
+            <div className="text-center text-gray-600 font-gotu mt-96 ">
+                DEVELOPED BY TEAM ZEN
+            </div>
         </div>
-        
-        
-    )
+    );
 }
 
-export default Welcome
+export default Welcome;

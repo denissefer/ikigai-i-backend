@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./FirstScreen.module.css";
 
 function FirstScreen() {
   const navigate = useNavigate();
@@ -13,33 +12,32 @@ function FirstScreen() {
     { char: "a", style: { top: "50%", left: "40%" } },
     { char: "i", style: { top: "60%", left: "60%" } },
   ];
-  //{ char: "i", style: { top: "10%", left: "50%" } },
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/Welcome");
+    }, array.length * 500 + 1000);
 
-    useEffect(() => {
-     const timer = setTimeout(()=>{
-      navigate("/Welcome")
-     }, array.length * 500 + 1000)
-
-     return () => clearTimeout(timer)
-    }, [array.length, navigate]);
+    return () => clearTimeout(timer);
+  }, [array.length, navigate]);
 
   return (
-    <div>
+    <div className="relative w-full h-screen bg-white overflow-hidden">
       {array.map((element, index) => (
-        <span className={styles.letter}
+        <span
           key={index}
           style={{
             position: "absolute",
             ...element.style,
-            animationDelay: `${index * 500}ms`
+            animationDelay: `${index * 500}ms`,
+            '--tw-translate-x': element.style.left === "60%" ? "-100px" : "100px", 
           }}
+          className="font-gotu text-8xl text-black opacity-0 animate-slide-fade-in"
         >
           {element.char}
         </span>
       ))}
     </div>
-    
   );
 }
 
