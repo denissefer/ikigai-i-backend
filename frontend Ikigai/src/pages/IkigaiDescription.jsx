@@ -8,11 +8,11 @@ function IkigaiDescription() {
     return (
         <div className="min-h-screen flex flex-col justify-center px-4">
             <section className="firstScreen flex flex-col items-center space-y-8 pb-96 text-center text-black">
-                {/* Title */}
-                <h4 className="font-tsukimi text-2xl pb-20">Ikiga-i</h4>
+            
+                <h4 className="font-tsukimi text-2xl pb-24">Ikiga-i</h4>
 
-                {/* Description */}
-                <div className="font-gotu text-lg space-y-4 pb-10">
+           
+                <div className="font-gotu text-lg space-y-4 pb-24 p-6">
                     <p>
                         Ikigai is a Japanese concept that translates to "reason for being."
                     </p>
@@ -27,9 +27,9 @@ function IkigaiDescription() {
                     </p>
                 </div>
 
-                {/* Button */}
+             
                 <button
-                    className="font-gotu px-8 py-2 bg-gray-200 text-gray-800 rounded-2xl hover:bg-gray-500 hover:text-white transition duration-300"
+                    className="font-gotu px-10 py-2 bg-gray-200 text-gray-800 rounded-2xl hover:bg-gray-500 hover:text-white transition duration-300"
                     onClick={() => navigate("/login")}
                 >
                     Continue
