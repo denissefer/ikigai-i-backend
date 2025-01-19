@@ -12,10 +12,10 @@ function Login() {
   };
 
   return (
-    <div>
-      <div className="login">
-        <h4>Ikiga-i</h4>
-        <h1>Log in</h1>
+    <div className={styles.container}>
+      <div className={styles.login_container}>
+        <span className={styles.title}>Ikiga-i</span> <br />
+        <span>Log in</span>
         <br />
         <form onSubmit={handleLogin}>
           <label htmlFor="email">Email</label> <br />
@@ -23,8 +23,7 @@ function Login() {
             id="email"
             className={styles.email}
             type="text"
-            placeholder="Enter your email"
-          />{" "}
+            placeholder="Enter your email"/>{" "}
           <br />
           <br />
           <label htmlFor="password">Password</label> <br />
@@ -41,8 +40,9 @@ function Login() {
       </div>
       <div className={styles.alternative}>
         <img src="" alt={styles.leftLine} />
-        <p>or</p>
+        <p>or</p> 
         <img src="" alt={styles.rightLine} />
+
       </div>
       <div className={styles.signUp}>
         <button className={styles.signUp} onClick={() => navigate("/signup")}>Sign Up</button>{" "}<br />

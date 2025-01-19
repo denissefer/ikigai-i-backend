@@ -25,7 +25,7 @@ function FirstScreen() {
     }, [array.length, navigate]);
 
   return (
-    <div>
+    <div className={styles.container}>
       {array.map((element, index) => (
         <span className={styles.letter}
           key={index}
