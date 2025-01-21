@@ -1,15 +1,11 @@
 
 
 .container {
-    position: relative;
+    position: relative; 
     width: 100vw;
     height: 100vh;
     background-color: white; /* Or any background you prefer */
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
   }
   
 .letter {

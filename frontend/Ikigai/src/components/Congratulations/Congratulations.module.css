@@ -4,4 +4,23 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
+    
 }
+
+.left_branch{
+    position: absolute;
+    top: 50px;
+    left: 0px ;
+}
+   
+.right_branch{
+    position: absolute;
+    bottom: 70px;
+    right: 0px ;
+}
+
+.plane_image{
+    bottom: 0;
+    left: 0;
+}
+
