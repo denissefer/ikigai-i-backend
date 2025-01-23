@@ -6,6 +6,7 @@ import IkigaiDescription from './pages/IkigaiDescription';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Congratulations from './pages/Congratulations'
+import Concepts from './pages/Concepts'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='/Login' element={<Login />} />
         <Route path='/Signup' element={<Signup />} />
         <Route path='/Congratulations' element={<Congratulations />} />
+        <Route path='/Concepts' element={<Concepts />} />
       </Routes>
     </BrowserRouter>
   );
