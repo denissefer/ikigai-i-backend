@@ -8,6 +8,11 @@ import SignUp from "./components/SignUp/SignUp.jsx";
 import Explore from "./components/Explore/Explore.jsx";
 import Congratulations from './components/Congratulations/Congratulations.jsx';
 import IkigaiMap from './components/IkigaiMap/IkigaiMap.jsx';
+import Inspirations from './components/Inspirations/Inspirations.jsx'
+import About from "./components/About/About.jsx";
+import Me from './components/About/About.jsx';
+import Settings
+from "./components/Settings/Settings.jsx";
 
 function App() {
   return (
@@ -21,6 +26,10 @@ function App() {
         <Route path="/explore" element ={<Explore/>}/>
         <Route path="/congratulations" element={<Congratulations/>}/>
         <Route path="/ikigaimap" element={<IkigaiMap/>}/>
+        <Route path="/inspirations" element={<Inspirations/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/me" element={<Me/>}/>
+        <Route path="/settings" element={<Settings/>}/>
       </Routes>
     </BrowserRouter>
   );
