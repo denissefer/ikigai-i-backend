@@ -1,25 +1,25 @@
 
-body {
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  }
+
 .container {
-    position: relative;
+    position: relative; 
     width: 100vw;
     height: 100vh;
     background-color: white; /* Or any background you prefer */
     overflow: hidden;
-    
   }
   
-  .letter {
+.letter {
     font-size: 100px;
     position: absolute;
     font-size: 2rem;
-    color: black;
+    color: rgb(71, 101, 185);
     opacity: 0;
     animation: fadeIn 1s forwards, dissolve 1s 3s forwards;
+    padding: 80px;
   }
   
+
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
