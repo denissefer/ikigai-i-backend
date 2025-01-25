@@ -73,7 +73,7 @@ export default function IkigaiMap() {
   };
 
   // Handle user input
-  const handleText = (section, subsection, text) => {
+   const handleText = (section, subsection, text) => {
     setCircleInput((previousState) => ({
       ...previousState, [section]: { ...previousState[section], [subsection]: text },}));
   };
@@ -110,11 +110,16 @@ export default function IkigaiMap() {
     setTitle(updatedTitle); // Update the title in state
   
     // Update local storage with the new title
-    setCircleInput((previousState) => {
-      const updatedState = { ...previousState, title: updatedTitle };
-      localStorage.setItem('ikigaiMapData', JSON.stringify(updatedState));
-      return updatedState;
-    });
+    setCircleInput((previousState) => ({
+      ...previousState,
+      data: {
+        ...previousState.data,
+        [section]: {
+          ...previousState.data[section],
+          [subsection]: text,
+        },
+      },
+    }));
   
     localStorage.setItem('ikigaiMapTitle', 'My Ikigai Map');
     closeModal(); // Close the modal
@@ -160,7 +165,7 @@ export default function IkigaiMap() {
             onClick={() => openModal('What you love')}
             style={{ cursor: 'pointer' }}
           />
-          {circleInput['What you love'].conclusion && (
+          {circleInput['What you love']?.conclusion && (
           <text
           x="155.5"
           y="35"
@@ -199,7 +204,7 @@ export default function IkigaiMap() {
             onClick={() => openModal('What you can be paid for')}
             style={{ cursor: 'pointer' }}
           />
-          {circleInput['What you can be paid for'].conclusion && (
+          {circleInput['What you can be paid for']?.conclusion && (
             <text
               x="155.5"
               y="269" // Adjusted for better alignment
@@ -236,7 +241,7 @@ export default function IkigaiMap() {
             onClick={() => openModal('What you are good at')}
             style={{ cursor: 'pointer' }}
           />
-          {circleInput['What you are good at'].conclusion && (
+          {circleInput['What you are good at']?.conclusion && (
             <text
               x="30.5"
               y="159" // Adjusted for better alignment
@@ -274,7 +279,7 @@ export default function IkigaiMap() {
             onClick={() => openModal('What the world needs')}
             style={{ cursor: 'pointer' }}
           />
-          {circleInput['What the world needs'].conclusion && (
+          {circleInput['What the world needs']?.conclusion && (
             <text
               x="282.5"
               y="159" // Adjusted for better alignment
@@ -416,8 +421,11 @@ export default function IkigaiMap() {
                 subsection !== 'conclusion' && (
                   <div key={index}>
                     <label>{questions[modal][subsection]}</label> <br />
-                    <input type="text" onChange={(e) => handleText(modal, subsection, e.target.value)} 
-                    value={circleInput[modal][subsection]}/>
+                    <input
+                      type="text"
+                      onChange={(e) => handleText(modal, subsection, e.target.value)}
+                      value={circleInput.data?.[modal]?.[subsection] || ''}  // Safe access with fallback
+                    />
                   </div>
                 )
             )}

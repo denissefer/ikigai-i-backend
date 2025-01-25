@@ -17,18 +17,19 @@ export default function Explore() {
           <span>flip</span> <br />
           <span>swipe</span>
         </div>
-        <div className={styles.inspirations}>
-          <span>books</span> <br />
-          <span>movies</span>
+        <div className={styles.inspirations} onClick={()=>navigate("/inspirations")}>Inspirations
+         
         </div>
         <div className={styles.inspirations}>My Bucket List</div>
         <div className={styles.inspirations}>3-Months-Planner</div>
       </div>
-      <div className={styles.navigation}>
-        <ul>
-          <li>explore</li>
-          <li>ikigai map</li>
-          <li>me</li>
+      <div>
+        <ul className={styles.navigation}>
+    
+          <li onClick={()=>navigate("/inspirations")}>Inspirations</li>
+          <li onClick={()=>navigate("/ikigaimap")}>Ikigai Map</li>
+          <li onClick={()=>navigate("/about")}>About</li>
+          <li onClick={()=>navigate("/me")}>Me</li>
         </ul>
       </div>
     </div>
