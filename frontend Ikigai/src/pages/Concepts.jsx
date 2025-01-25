@@ -221,6 +221,9 @@ export function Concepts() {
             Ikigai Map
           </button>
           <button className="text-lg font-gotu hover:bg-slate-600 rounded">
+            Inspirations
+          </button>
+          <button className="text-lg font-gotu hover:bg-slate-600 rounded">
             About
           </button>
           <button className="text-lg font-gotu hover:bg-slate-600 rounded">
