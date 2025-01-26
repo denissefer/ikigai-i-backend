@@ -40,8 +40,5 @@ export default function SignUp() {
     </div>
   );
 }
-<<<<<<< HEAD
-=======
 
 
->>>>>>> main

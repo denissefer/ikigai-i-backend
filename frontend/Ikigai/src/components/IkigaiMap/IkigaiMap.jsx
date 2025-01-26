@@ -1,132 +1,96 @@
-import React, { useState, useEffect } from 'react';
+ 
+
+import React, {useState, useEffect} from 'react';
 import styles from './IkigaiMap.module.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function IkigaiMap() {
-  const loadFromLocalStorage = (key) => {
-    try {
-      const storedData = localStorage.getItem(key);
-      if (storedData) {
-        return JSON.parse(storedData);
-      }
-      return null;
-    } catch (error) {
-      console.error(`Error loading data from local storage: ${error}`);
-      return null;
-    }
-  };
 
-  const storedTitle = localStorage.getItem('ikigaiMapTitle');
-  const initialTitle = storedTitle || 'Create your ikigai map'; // Default title if not found
-
-  const storedData = loadFromLocalStorage('ikigaiMapData');
-  const navigate = useNavigate();
-  const [modal, setModal] = useState(null);
-  const [completed, setCompleted] = useState(false); // Track if all circles are completed
-  const [title, setTitle] = useState(initialTitle); // Set initial title
-  const [circleInput, setCircleInput] = useState(
-    storedData ?? {
-      title: 'Create your ikigai map', // Add default title
-      data: {'What you love': { passion: '', mission: '', conclusion: '' },
+const navigate = useNavigate();
+    const [modal, setModal] = useState(null);
+    const [circleInput, setCircleInput] = useState({
+      'What you love': { passion: '', mission: '', conclusion: '' },
       'What the world needs': { mission: '', vocation: '', conclusion: '' },
       'What you are good at': { passion: '', profession: '', conclusion: '' },
-      'What you can be paid for': { vocation: '', profession: '', conclusion: '' }},
-    }
-  );
+      'What you can be paid for': { vocation: '', profession: '', conclusion: '' },
+    });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal visibility
 
-  // Save to localStorage whenever circleInput changes
-  useEffect(() => {
+// Load data from local storage on mount
+useEffect(() => {
+  const storedData = localStorage.getItem('ikigaiMapData');
+  if (storedData) {
+    setCircleInput(JSON.parse(storedData));
+  }
+}, []);
+
+// Save data to local storage whenever circleInput changes
+useEffect(() => {
+  try {
     localStorage.setItem('ikigaiMapData', JSON.stringify(circleInput));
-  }, [circleInput]);
+    console.log('Data saved to local storage:', circleInput); // Debugging
+  } catch (error) {
+    console.error('Error saving to local storage:', error);
+  }
+}, [circleInput]);
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add('modal-open');
-    } else {
-      document.body.classList.remove('modal-open');
-    }
-  }, [isModalOpen]);
+useEffect(() => {
+  if (isModalOpen) {
+    document.body.classList.add('modal-open');
+  } else {
+    document.body.classList.remove('modal-open');
+  }
+}, [isModalOpen]);
 
-  const questions = {
-    'What you love': {
-      passion: 'What activities make you feel excited and fulfilled?',
-      mission: 'What problems in the world do you feel strongly about solving?',
-      conclusion: 'Based on your passion and mission, what do you feel your purpose is?',
-    },
-    'What the world needs': {
-      mission: 'What causes make you want to contribute to the world’s betterment?',
-      vocation: 'What roles or professions inspire you the most?',
-      conclusion: 'Based on your mission and vocation, what impact do you want to have on the world?',
-    },
-    'What you are good at': {
-      passion: 'What tasks do you excel at or get recognized for?',
-      profession: 'What skills do you have that others come to you for help with?',
-      conclusion: 'Based on your passion and profession, what do you feel your strengths are?',
-    },
-    'What you can be paid for': {
-      vocation: 'In which areas do you have the most potential to make an impact?',
-      profession: 'What activities, services, or skills could you see yourself doing professionally?',
-      conclusion: 'Based on your vocation and profession, how do you see yourself earning a living?',
-    },
-  };
+const questions = {     
+  'What you love': {
+    passion: 'Passion. What activities or hobbies make you feel excited and fulfilled?',
+    mission: 'Mission. What problems in the world do you feel strongly about solving?',
+    conclusion: 'Based on your passion and mission, what do you feel your purpose is?',
+  },
+  'What the world needs': {
+    mission: 'Mission. What causes make you feel like you want to contribute to the world’s betterment?',
+    vocation: 'Vocation. What roles or professions inspire you the most and make you feel aligned with your personal mission?',
+    conclusion: 'Based on your mission and vocation, what impact do you want to have on the world?',
+  },
+  'What you can be paid for': {
+    vocation: 'Vocation. In which professions or areas do you feel you have the most potential to make a long-lasting impact?',
+    profession: 'Profession. What activities, services, or skills could you see yourself doing professionally?',
+    conclusion: 'Based on your vocation and profession, how do you see yourself earning a living?',
+  },
+  'What you are good at': {
+    passion: 'Passion. What tasks do you excel at or get recognized for in your job or career?',
+    profession: 'Profession. What skills do you have that others often come to you for help with?',
+    conclusion: 'Based on your passion and profession, what do you feel your strengths are?',
+  },
+};
 
-  // Handle user input
-   const handleText = (section, subsection, text) => {
+  // Handle user input for each subsection
+  const handleText = (section, subsection, text) => {
     setCircleInput((previousState) => ({
       ...previousState, [section]: { ...previousState[section], [subsection]: text },}));
   };
     
-
-  // Handle conclusion input
-  const handleConclusion = (section, text) => {
+   // Handle conclusion input
+   const handleConclusion = (section, text) => {
     setCircleInput((previousState) => ({...previousState, [section]: { ...previousState[section], conclusion: text },}));};
-
-  const openModal = (section) => {
-    setModal(section);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModal(null);
-    setIsModalOpen(false);
-  };
-
-  // Check if all circles are complete
-  const allCirclesComplete = Object.values(circleInput?.data ?? {}).every(
-    (circle) =>
-      circle.passion.trim() &&
-      circle.mission.trim() &&
-      circle.conclusion.trim()
-  );
-
-
-  // Handle Complete button
-    // Handle Complete button
-  const handleComplete = () => {
-    setCompleted(true); // Mark as completed
-    const updatedTitle = 'My Ikigai Map'; // New title
-    setTitle(updatedTitle); // Update the title in state
+        
+    
+    const openModal = (section) => {
+      setModal(section);
+      setIsModalOpen(true); // Show modal
+    };
   
-    // Update local storage with the new title
-    setCircleInput((previousState) => ({
-      ...previousState,
-      data: {
-        ...previousState.data,
-        [section]: {
-          ...previousState.data[section],
-          [subsection]: text,
-        },
-      },
-    }));
+    const closeModal = () => {
+      setModal(null);
+      setIsModalOpen(false); // Hide modal
+    };
   
-    localStorage.setItem('ikigaiMapTitle', 'My Ikigai Map');
-    closeModal(); // Close the modal
-  };
     
    return (
      <div className={styles.main_container}>
+
       <div className={styles.left_branch}>
         <svg width="242" height="120" viewBox="0 0 199 77" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.01896 69C4.01896 70.3333 13.519 72.2 27.519 69C45.019 65 52.519 64 58.519 61C64.519 59 95.519 31.5 108.019 31.5C103.519 27.5 105.519 22 110.519 19C112.519 23 112.519 29.5 109.519 31.5C114.519 30 128.019 23.5 131.019 23.5C129.019 20.5 129.519 17 134.519 15C135.019 20 135.519 21.5 132.519 23.5C137.319 22.7 142.186 21.1667 144.019 20.5C141.686 19.6667 138.219 16 143.019 8C146.019 12.5 148.019 15 146.019 19C148.019 18 153.519 15 153.519 13C152.019 10 153.019 3 157.519 1C160.019 8 160.019 11.5 154.519 13.5C150.019 18.5 150.019 18.5 146.019 21C149.519 21.5 157.519 24 162.519 19.5C163.519 14 165.019 11.5 170.019 11C171.019 14.5 169.519 20.5 163.519 20C161.519 21 161.019 21 161.019 21.5C161.019 22 168.519 21 168.519 27C161.019 27.5 160.019 26.5 159.519 21.5C157.919 22.3 152.186 22.5 149.519 22.5C152.519 22.5 158.619 24.5 159.019 32.5C155.019 31.5 150.019 29.5 148.519 23.5C146.019 22.5 140.019 23 138.519 24.5C141.019 25 146.019 29 146.019 34C142.519 33.5 136.519 30.5 136.519 25.5C132.019 25.5 127.019 25 119.019 31.5C122.019 32.5 136.519 38.5 148.019 40C159.519 39.5 175.519 34.5 182.019 29C182.519 24.5 185.519 21.5 192.019 21.5C191.019 29 186.019 30.5 181.519 30C178.019 32.5 164.019 40 161.019 40C162.519 40.5 186.019 38 189.019 35.5C190.019 31.5 193.019 29.5 198.019 33C195.519 36.5 196.019 36.3481 189.019 37C184.619 36.6 182.519 38.1667 182.019 39C185.019 38.8333 190.819 40.4 190.019 48C184.019 47 182.019 45 181.019 39C176.019 38.6556 168.019 40.5 167.519 41C167.019 41.5 178.019 41 177.019 51.5C170.019 51 165.519 44.2196 166.019 42C162.519 41 155.019 40.5 150.519 42C146.519 42 146.019 43 116.019 34.5C108.019 33.5 95.519 35.5 81.019 51.5C84.019 52 101.519 63 111.519 52C110.519 46.5 108.519 42.5 117.019 39C117.89 46.8419 116.104 49.749 113.977 51.0288C116.578 50.2197 122.3 48.8203 125.019 49.5C128.019 46.5 136.519 46 141.019 52C134.019 55 130.519 55.5 124.519 50.5C117.019 50.2077 117.019 50.5 104.519 58C105.019 59 116.019 60 117.519 58.5C120.019 57.5 123.519 54.5 127.519 65C118.019 64 118.019 61.5 117.019 60C115.519 60 115.019 59 108.519 60C110.519 62.5 115.019 66 111.519 73.5C106.019 71 105.019 65 106.019 60C99.519 60 90.019 58.5 83.019 54.5C78.019 54 76.519 53 68.519 60C58.519 67.5 46.019 70 23.019 73.5C4.61896 76.3 0.685629 76 1.01896 75.5V69Z" fill="#5591DF" fillOpacity="0.5"/>
@@ -148,165 +112,166 @@ export default function IkigaiMap() {
           <path d="M211 55C193.667 62.3333 150 70.5 114 44.5C106.5 41.5 104 41.5 96.5 42C81 35 85.5 22.5 62 20C55.5 18.5 51.5 16.5 50.5 12.5C52.5 18 58.5118 21.5 69 24C87 36 75.5 39.5 93 47C92 53 84 57.5 77.5 58.5C72 57 68 54.5 62 44.5C57.5 36 38.5 41 36.5 38C33.3 38 22.8333 26.6667 18 21C21.8333 26.3333 30.9 37.5 36.5 39.5C44.5 44.5 57 34.5 66 58.5C59 63 55.5 69.5 50.5 69C44.5 67.5 46 59.5 43 58.5C40 57.5 28.5 58 25 53C29 57 30 58 39 59.5C44 61.5 41 74 53.5 71C56.5 70 65 60 72 62.5C77.5 65 84 68 104 53C126.5 55 124 67 144.5 69C162.5 72.5 183.5 71.5 211 66.5C211 58.5 211 55.5 211 55ZM52.5 12.5C51.6667 10 51.4 4.7 57 3.5C57.5 9 55.5 12 53.5 12.5C51.9 12.9 52.1667 12.6667 52.5 12.5ZM49.5 13.5C48.3333 10.3333 43.7 5.4 34.5 11C45 17 48 17 49.5 13.5ZM50.5 8C50.5 5.83333 49.1 1.4 43.5 1C44.5 6.5 46.5 7 50.5 8ZM26.5 51.5C25.6667 49.8333 25.5 46.3 31.5 45.5C30.5 51.5 29 51.5 26.5 51.5ZM25 48.5C25.8333 46 25.8 40.7 19 39.5C21.5 48.5 23.5 47.5 25 48.5ZM22.5 54C21.1667 50.1667 16.6 44.3 9 51.5C18 56.5 21 55 22.5 54ZM19 18.5C17.8333 17 16.2 13.4 19 11C21.5 12.5 22.5 15.5 19 18.5ZM15 17C15 13 12.2 6 1 10C3 12 8 19 15 17ZM17 23C15.6667 20.8333 11.3 17.4 4.5 21C10.5 25 14 27 17 23Z" stroke="#5591DF" strokeOpacity="0.7"/>
         </svg>
       </div>
-      <div className={styles.title}>
-        <h1>{title}</h1>
-      </div>
+       <div className={styles.title}>
+        <h1>Create your ikigai map</h1>
+       </div>
        <div className={styles.ikigai_map}>
         <div className={styles.circles}>
         <svg width="315" height="306" viewBox="0 0 315 306" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Circle "What you love" */}
-          <ellipse
-            cx="155.5"
-            cy="91.5"
-            rx="92.5"
-            ry="91.5"
-            fill="#5591DF"
-            fillOpacity="0.45"
-            onClick={() => openModal('What you love')}
-            style={{ cursor: 'pointer' }}
-          />
-          {circleInput['What you love']?.conclusion && (
-          <text
-          x="155.5"
-          y="35"
-          textAnchor="middle"
-          fontSize="12" // Fixed font size
-          fontWeight="normal"
-          fill="black"
-        >
-          {circleInput['What you love'].conclusion
-            .split(' ')
-            .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
-            .join(' ') // Combine into a single string
-            .match(/.{1,20}/g) // Split into chunks for wrapping
-            ?.slice(0, 3) // Limit to 3 lines
-            .map((line, index) => (
-              <tspan
-                x="155.5"
-                dy={index === 0 ? 0 : 14} // Vertical offset for each line
-                key={index}
-              >
-                {line.trim()}
-              </tspan>
-            ))}
-        </text>
-        
-          )}
+  {/* Circle "What you love" */}
+  <ellipse
+    cx="155.5"
+    cy="91.5"
+    rx="92.5"
+    ry="91.5"
+    fill="#5591DF"
+    fillOpacity="0.45"
+    onClick={() => openModal('What you love')}
+    style={{ cursor: 'pointer' }}
+  />
+  {circleInput['What you love'].conclusion && (
+   <text
+   x="155.5"
+   y="35"
+   textAnchor="middle"
+   fontSize="12" // Fixed font size
+   fontWeight="normal"
+   fill="black"
+ >
+   {circleInput['What you love'].conclusion
+     .split(' ')
+     .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
+     .join(' ') // Combine into a single string
+     .match(/.{1,20}/g) // Split into chunks for wrapping
+     ?.slice(0, 3) // Limit to 3 lines
+     .map((line, index) => (
+       <tspan
+         x="155.5"
+         dy={index === 0 ? 0 : 14} // Vertical offset for each line
+         key={index}
+       >
+         {line.trim()}
+       </tspan>
+     ))}
+ </text>
+ 
+  )}
 
-          {/* Circle "What you can be paid for" */}
-          <ellipse
-            cx="155.5"
-            cy="214.5"
-            rx="92.5"
-            ry="91.5"
-            fill="#5591DF"
-            fillOpacity="0.45"
-            onClick={() => openModal('What you can be paid for')}
-            style={{ cursor: 'pointer' }}
-          />
-          {circleInput['What you can be paid for']?.conclusion && (
-            <text
-              x="155.5"
-              y="269" // Adjusted for better alignment
-              textAnchor="middle"
-              fontSize="12"
-              fontWeight="normal"
-              fill="black"
-            >
-              {circleInput['What you can be paid for'].conclusion
-            .split(' ')
-            .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
-            .join(' ') // Combine into a single string
-            .match(/.{1,20}/g) // Split into chunks for wrapping
-            ?.slice(0, 3) // Limit to 3 lines
-            .map((line, index) => (
-              <tspan
-                x="155.5"
-                dy={index === 0 ? 0 : 14} // Vertical offset for each line
-                key={index}
-              >
-                {line.trim()}
-              </tspan>
-            ))}
-            </text>
-          )}
-          {/* Circle "What you are good at" */}
-          <ellipse
-            cx="92.5"
-            cy="154.5"
-            rx="92.5"
-            ry="91.5"
-            fill="#5591DF"
-            fillOpacity="0.5"
-            onClick={() => openModal('What you are good at')}
-            style={{ cursor: 'pointer' }}
-          />
-          {circleInput['What you are good at']?.conclusion && (
-            <text
-              x="30.5"
-              y="159" // Adjusted for better alignment
-              textAnchor="middle"
-              fontSize="12"
-              fontWeight="normal"
-              fill="black"
-            >
-              {circleInput['What you are good at'].conclusion
-            .split(' ')
-            .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
-            .join(' ') // Combine into a single string
-            .match(/.{1,20}/g) // Split into chunks for wrapping
-            ?.slice(0, 3) // Limit to 3 lines
-            .map((line, index) => (
-              <tspan
-                x="60.5"
-                dy={index === 0 ? 0 : 14} // Vertical offset for each line
-                key={index}
-              >
-                {line.trim()}
-              </tspan>
-            ))}
-            </text>
-          )}
+  {/* Circle "What you can be paid for" */}
+  <ellipse
+    cx="155.5"
+    cy="214.5"
+    rx="92.5"
+    ry="91.5"
+    fill="#5591DF"
+    fillOpacity="0.45"
+    onClick={() => openModal('What you can be paid for')}
+    style={{ cursor: 'pointer' }}
+  />
+  {circleInput['What you can be paid for'].conclusion && (
+    <text
+      x="155.5"
+      y="279" // Adjusted for better alignment
+      textAnchor="middle"
+      fontSize="12"
+      fontWeight="normal"
+      fill="black"
+    >
+      {circleInput['What you can be paid for'].conclusion
+     .split(' ')
+     .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
+     .join(' ') // Combine into a single string
+     .match(/.{1,20}/g) // Split into chunks for wrapping
+     ?.slice(0, 3) // Limit to 3 lines
+     .map((line, index) => (
+       <tspan
+         x="155.5"
+         dy={index === 0 ? 0 : 14} // Vertical offset for each line
+         key={index}
+       >
+         {line.trim()}
+       </tspan>
+     ))}
+    </text>
+  )}
 
-          {/* Circle "What the world needs" */}
-          <ellipse
-            cx="222.5"
-            cy="154.5"
-            rx="92.5"
-            ry="91.5"
-            fill="#5591DF"
-            fillOpacity="0.5"
-            onClick={() => openModal('What the world needs')}
-            style={{ cursor: 'pointer' }}
-          />
-          {circleInput['What the world needs']?.conclusion && (
-            <text
-              x="282.5"
-              y="159" // Adjusted for better alignment
-              textAnchor="middle"
-              fontSize="12"
-              fontWeight="normal"
-              fill="black"
-            >
-              {circleInput['What the world needs'].conclusion
-            .split(' ')
-            .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
-            .join(' ') // Combine into a single string
-            .match(/.{1,20}/g) // Split into chunks for wrapping
-            ?.slice(0, 3) // Limit to 3 lines
-            .map((line, index) => (
-              <tspan
-                x="250.5"
-                dy={index === 0 ? 0 : 14} // Vertical offset for each line
-                key={index}
-              >
-                {line.trim()}
-              </tspan>
-            ))}
-            </text>
-          )}
-        </svg>
-      </div>
+  {/* Circle "What you are good at" */}
+  <ellipse
+    cx="92.5"
+    cy="154.5"
+    rx="92.5"
+    ry="91.5"
+    fill="#5591DF"
+    fillOpacity="0.5"
+    onClick={() => openModal('What you are good at')}
+    style={{ cursor: 'pointer' }}
+  />
+  {circleInput['What you are good at'].conclusion && (
+    <text
+      x="30.5"
+      y="159" // Adjusted for better alignment
+      textAnchor="middle"
+      fontSize="12"
+      fontWeight="normal"
+      fill="black"
+    >
+      {circleInput['What you are good at'].conclusion
+     .split(' ')
+     .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
+     .join(' ') // Combine into a single string
+     .match(/.{1,20}/g) // Split into chunks for wrapping
+     ?.slice(0, 3) // Limit to 3 lines
+     .map((line, index) => (
+       <tspan
+         x="60.5"
+         dy={index === 0 ? 0 : 14} // Vertical offset for each line
+         key={index}
+       >
+         {line.trim()}
+       </tspan>
+     ))}
+    </text>
+  )}
+
+  {/* Circle "What the world needs" */}
+  <ellipse
+    cx="222.5"
+    cy="154.5"
+    rx="92.5"
+    ry="91.5"
+    fill="#5591DF"
+    fillOpacity="0.5"
+    onClick={() => openModal('What the world needs')}
+    style={{ cursor: 'pointer' }}
+  />
+  {circleInput['What the world needs'].conclusion && (
+    <text
+      x="282.5"
+      y="159" // Adjusted for better alignment
+      textAnchor="middle"
+      fontSize="12"
+      fontWeight="normal"
+      fill="black"
+    >
+      {circleInput['What the world needs'].conclusion
+     .split(' ')
+     .slice(0, 15) // Limit to 15 words for 3 lines (5 words per line)
+     .join(' ') // Combine into a single string
+     .match(/.{1,20}/g) // Split into chunks for wrapping
+     ?.slice(0, 3) // Limit to 3 lines
+     .map((line, index) => (
+       <tspan
+         x="250.5"
+         dy={index === 0 ? 0 : 14} // Vertical offset for each line
+         key={index}
+       >
+         {line.trim()}
+       </tspan>
+     ))}
+    </text>
+  )}
+</svg>
+        </div>
         <div className={styles.aspects}>
           <svg width="169" height="123" viewBox="0 0 169 123" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M125.064 9.232C125.064 8.576 124.932 8.092 124.668 7.78C124.412 7.46 124.04 7.3 123.552 7.3C123.168 7.3 122.824 7.416 122.52 7.648C122.216 7.88 121.98 8.156 121.812 8.476V12.904C121.7 12.968 121.552 13.012 121.368 13.036C121.192 13.068 121.024 13.084 120.864 13.084V6.94C121.128 6.804 121.424 6.736 121.752 6.736V7.852C121.84 7.716 121.952 7.576 122.088 7.432C122.232 7.28 122.396 7.144 122.58 7.024C122.772 6.904 122.984 6.808 123.216 6.736C123.448 6.656 123.7 6.616 123.972 6.616C124.468 6.616 124.872 6.748 125.184 7.012C125.504 7.268 125.72 7.58 125.832 7.948C125.928 7.82 126.048 7.68 126.192 7.528C126.344 7.368 126.516 7.22 126.708 7.084C126.9 6.948 127.112 6.836 127.344 6.748C127.584 6.66 127.84 6.616 128.112 6.616C128.72 6.616 129.212 6.808 129.588 7.192C129.972 7.568 130.164 8.124 130.164 8.86V12.904C130.052 12.968 129.904 13.012 129.72 13.036C129.544 13.068 129.376 13.084 129.216 13.084V9.232C129.216 7.944 128.716 7.3 127.716 7.3C127.388 7.3 127.068 7.412 126.756 7.636C126.452 7.852 126.204 8.124 126.012 8.452V12.904C125.9 12.968 125.752 13.012 125.568 13.036C125.392 13.068 125.224 13.084 125.064 13.084V9.232ZM133.632 4.852C133.56 4.98 133.448 5.116 133.296 5.26C133.144 5.396 133.008 5.492 132.888 5.548C132.768 5.492 132.632 5.396 132.48 5.26C132.328 5.116 132.212 4.98 132.132 4.852C132.212 4.716 132.328 4.576 132.48 4.432C132.632 4.288 132.768 4.184 132.888 4.12C133.008 4.184 133.144 4.288 133.296 4.432C133.456 4.576 133.568 4.716 133.632 4.852ZM132.384 6.94C132.52 6.868 132.668 6.816 132.828 6.784C132.996 6.752 133.164 6.736 133.332 6.736V12.904C133.22 12.968 133.072 13.012 132.888 13.036C132.712 13.068 132.544 13.084 132.384 13.084V6.94ZM135.055 11.728C135.119 11.616 135.223 11.512 135.367 11.416C135.519 11.32 135.679 11.264 135.847 11.248C135.903 11.656 136.099 11.996 136.435 12.268C136.779 12.532 137.215 12.664 137.743 12.664C138.247 12.664 138.619 12.556 138.859 12.34C139.107 12.116 139.231 11.84 139.231 11.512C139.231 11.184 139.115 10.928 138.883 10.744C138.659 10.56 138.271 10.4 137.719 10.264L137.011 10.084C136.755 10.02 136.523 9.948 136.315 9.868C136.115 9.788 135.939 9.692 135.787 9.58C135.643 9.46 135.531 9.32 135.451 9.16C135.371 9 135.331 8.804 135.331 8.572C135.331 8.324 135.395 8.084 135.523 7.852C135.651 7.612 135.827 7.4 136.051 7.216C136.283 7.032 136.547 6.888 136.843 6.784C137.147 6.672 137.475 6.616 137.827 6.616C138.187 6.616 138.491 6.66 138.739 6.748C138.987 6.828 139.191 6.932 139.351 7.06C139.519 7.18 139.639 7.312 139.711 7.456C139.791 7.6 139.835 7.728 139.843 7.84C139.787 7.952 139.691 8.052 139.555 8.14C139.419 8.22 139.271 8.268 139.111 8.284C139.055 7.98 138.899 7.716 138.643 7.492C138.387 7.268 138.003 7.156 137.491 7.156C137.323 7.156 137.155 7.18 136.987 7.228C136.827 7.268 136.683 7.332 136.555 7.42C136.427 7.508 136.323 7.616 136.243 7.744C136.163 7.864 136.123 8.008 136.123 8.176C136.123 8.448 136.219 8.668 136.411 8.836C136.603 8.996 136.939 9.132 137.419 9.244L138.151 9.424C138.847 9.6 139.343 9.824 139.639 10.096C139.943 10.36 140.095 10.7 140.095 11.116C140.095 11.38 140.035 11.64 139.915 11.896C139.795 12.144 139.619 12.368 139.387 12.568C139.155 12.76 138.871 12.912 138.535 13.024C138.199 13.144 137.815 13.204 137.383 13.204C137.007 13.204 136.679 13.156 136.399 13.06C136.119 12.972 135.879 12.856 135.679 12.712C135.487 12.568 135.339 12.412 135.235 12.244C135.131 12.068 135.071 11.896 135.055 11.728ZM141.278 11.728C141.342 11.616 141.446 11.512 141.59 11.416C141.742 11.32 141.902 11.264 142.07 11.248C142.126 11.656 142.322 11.996 142.658 12.268C143.002 12.532 143.438 12.664 143.966 12.664C144.47 12.664 144.842 12.556 145.082 12.34C145.33 12.116 145.454 11.84 145.454 11.512C145.454 11.184 145.338 10.928 145.106 10.744C144.882 10.56 144.494 10.4 143.942 10.264L143.234 10.084C142.978 10.02 142.746 9.948 142.538 9.868C142.338 9.788 142.162 9.692 142.01 9.58C141.866 9.46 141.754 9.32 141.674 9.16C141.594 9 141.554 8.804 141.554 8.572C141.554 8.324 141.618 8.084 141.746 7.852C141.874 7.612 142.05 7.4 142.274 7.216C142.506 7.032 142.77 6.888 143.066 6.784C143.37 6.672 143.698 6.616 144.05 6.616C144.41 6.616 144.714 6.66 144.962 6.748C145.21 6.828 145.414 6.932 145.574 7.06C145.742 7.18 145.862 7.312 145.934 7.456C146.014 7.6 146.058 7.728 146.066 7.84C146.01 7.952 145.914 8.052 145.778 8.14C145.642 8.22 145.494 8.268 145.334 8.284C145.278 7.98 145.122 7.716 144.866 7.492C144.61 7.268 144.226 7.156 143.714 7.156C143.546 7.156 143.378 7.18 143.21 7.228C143.05 7.268 142.906 7.332 142.778 7.42C142.65 7.508 142.546 7.616 142.466 7.744C142.386 7.864 142.346 8.008 142.346 8.176C142.346 8.448 142.442 8.668 142.634 8.836C142.826 8.996 143.162 9.132 143.642 9.244L144.374 9.424C145.07 9.6 145.566 9.824 145.862 10.096C146.166 10.36 146.318 10.7 146.318 11.116C146.318 11.38 146.258 11.64 146.138 11.896C146.018 12.144 145.842 12.368 145.61 12.568C145.378 12.76 145.094 12.912 144.758 13.024C144.422 13.144 144.038 13.204 143.606 13.204C143.23 13.204 142.902 13.156 142.622 13.06C142.342 12.972 142.102 12.856 141.902 12.712C141.71 12.568 141.562 12.412 141.458 12.244C141.354 12.068 141.294 11.896 141.278 11.728ZM149.288 4.852C149.216 4.98 149.104 5.116 148.952 5.26C148.8 5.396 148.664 5.492 148.544 5.548C148.424 5.492 148.288 5.396 148.136 5.26C147.984 5.116 147.868 4.98 147.788 4.852C147.868 4.716 147.984 4.576 148.136 4.432C148.288 4.288 148.424 4.184 148.544 4.12C148.664 4.184 148.8 4.288 148.952 4.432C149.112 4.576 149.224 4.716 149.288 4.852ZM148.04 6.94C148.176 6.868 148.324 6.816 148.484 6.784C148.652 6.752 148.82 6.736 148.988 6.736V12.904C148.876 12.968 148.728 13.012 148.544 13.036C148.368 13.068 148.2 13.084 148.04 13.084V6.94ZM151.791 9.652C151.791 10.156 151.851 10.596 151.971 10.972C152.099 11.348 152.263 11.664 152.463 11.92C152.671 12.168 152.907 12.356 153.171 12.484C153.443 12.612 153.727 12.676 154.023 12.676C154.663 12.676 155.151 12.464 155.487 12.04C155.823 11.608 155.991 10.96 155.991 10.096C155.991 9.68 155.943 9.292 155.847 8.932C155.751 8.572 155.607 8.26 155.415 7.996C155.231 7.732 155.003 7.524 154.731 7.372C154.459 7.22 154.147 7.144 153.795 7.144C153.539 7.144 153.291 7.192 153.051 7.288C152.811 7.384 152.599 7.536 152.415 7.744C152.231 7.944 152.079 8.204 151.959 8.524C151.847 8.836 151.791 9.212 151.791 9.652ZM150.783 10.024C150.783 9.536 150.871 9.084 151.047 8.668C151.223 8.244 151.459 7.884 151.755 7.588C152.059 7.284 152.411 7.048 152.811 6.88C153.219 6.704 153.651 6.616 154.107 6.616C154.603 6.616 155.031 6.7 155.391 6.868C155.759 7.036 156.059 7.26 156.291 7.54C156.531 7.82 156.707 8.148 156.819 8.524C156.939 8.9 156.999 9.296 156.999 9.712C156.999 10.2 156.923 10.656 156.771 11.08C156.619 11.504 156.399 11.876 156.111 12.196C155.831 12.508 155.487 12.756 155.079 12.94C154.671 13.124 154.207 13.216 153.687 13.216C153.303 13.216 152.935 13.144 152.583 13C152.231 12.856 151.919 12.648 151.647 12.376C151.383 12.104 151.171 11.772 151.011 11.38C150.859 10.98 150.783 10.528 150.783 10.024ZM163.215 9.256C163.215 8.576 163.075 8.08 162.795 7.768C162.515 7.448 162.119 7.288 161.607 7.288C161.423 7.288 161.239 7.324 161.055 7.396C160.879 7.46 160.707 7.548 160.539 7.66C160.379 7.772 160.227 7.904 160.083 8.056C159.939 8.2 159.811 8.352 159.699 8.512V12.904C159.587 12.968 159.439 13.012 159.255 13.036C159.079 13.068 158.911 13.084 158.751 13.084V6.94C159.015 6.804 159.311 6.736 159.639 6.736V7.924C159.743 7.788 159.875 7.644 160.035 7.492C160.203 7.332 160.387 7.188 160.587 7.06C160.795 6.932 161.019 6.828 161.259 6.748C161.507 6.66 161.771 6.616 162.051 6.616C162.699 6.616 163.211 6.812 163.587 7.204C163.971 7.596 164.163 8.156 164.163 8.884V12.904C164.051 12.968 163.903 13.012 163.719 13.036C163.543 13.068 163.375 13.084 163.215 13.084V9.256Z" fill="black"/>
@@ -316,14 +281,7 @@ export default function IkigaiMap() {
             <path d="M119.387 116.866C119.291 116.93 119.155 116.982 118.979 117.022C118.811 117.062 118.659 117.082 118.523 117.082C118.307 116.714 118.079 116.27 117.839 115.75C117.599 115.222 117.367 114.678 117.143 114.118C116.919 113.55 116.715 112.994 116.531 112.45C116.355 111.906 116.215 111.422 116.111 110.998C116.247 110.91 116.391 110.846 116.543 110.806C116.703 110.758 116.867 110.734 117.035 110.734C117.123 111.118 117.239 111.554 117.383 112.042C117.535 112.53 117.703 113.034 117.887 113.554C118.071 114.066 118.263 114.574 118.463 115.078C118.671 115.582 118.879 116.042 119.087 116.458C119.519 115.594 119.895 114.678 120.215 113.71C120.543 112.734 120.799 111.798 120.983 110.902C121.071 110.854 121.175 110.814 121.295 110.782C121.415 110.75 121.535 110.734 121.655 110.734C121.695 110.734 121.735 110.734 121.775 110.734C121.815 110.734 121.855 110.738 121.895 110.746C121.767 111.226 121.611 111.73 121.427 112.258C121.243 112.786 121.039 113.318 120.815 113.854C120.599 114.382 120.367 114.906 120.119 115.426C119.879 115.938 119.635 116.418 119.387 116.866ZM123.731 113.65C123.731 114.154 123.791 114.594 123.911 114.97C124.039 115.346 124.203 115.662 124.403 115.918C124.611 116.166 124.847 116.354 125.111 116.482C125.383 116.61 125.667 116.674 125.963 116.674C126.603 116.674 127.091 116.462 127.427 116.038C127.763 115.606 127.931 114.958 127.931 114.094C127.931 113.678 127.883 113.29 127.787 112.93C127.691 112.57 127.547 112.258 127.355 111.994C127.171 111.73 126.943 111.522 126.671 111.37C126.399 111.218 126.087 111.142 125.735 111.142C125.479 111.142 125.231 111.19 124.991 111.286C124.751 111.382 124.539 111.534 124.355 111.742C124.171 111.942 124.019 112.202 123.899 112.522C123.787 112.834 123.731 113.21 123.731 113.65ZM122.723 114.022C122.723 113.534 122.811 113.082 122.987 112.666C123.163 112.242 123.399 111.882 123.695 111.586C123.999 111.282 124.351 111.046 124.751 110.878C125.159 110.702 125.591 110.614 126.047 110.614C126.543 110.614 126.971 110.698 127.331 110.866C127.699 111.034 127.999 111.258 128.231 111.538C128.471 111.818 128.647 112.146 128.759 112.522C128.879 112.898 128.939 113.294 128.939 113.71C128.939 114.198 128.863 114.654 128.711 115.078C128.559 115.502 128.339 115.874 128.051 116.194C127.771 116.506 127.427 116.754 127.019 116.938C126.611 117.122 126.147 117.214 125.627 117.214C125.243 117.214 124.875 117.142 124.523 116.998C124.171 116.854 123.859 116.646 123.587 116.374C123.323 116.102 123.111 115.77 122.951 115.378C122.799 114.978 122.723 114.526 122.723 114.022ZM135.562 112.03C135.514 112.118 135.418 112.21 135.274 112.306C135.138 112.402 134.966 112.462 134.758 112.486C134.734 112.35 134.686 112.206 134.614 112.054C134.55 111.894 134.454 111.75 134.326 111.622C134.198 111.486 134.038 111.378 133.846 111.298C133.654 111.21 133.422 111.166 133.15 111.166C132.926 111.166 132.698 111.21 132.466 111.298C132.242 111.386 132.038 111.53 131.854 111.73C131.67 111.93 131.518 112.186 131.398 112.498C131.286 112.81 131.23 113.19 131.23 113.638C131.23 114.118 131.294 114.538 131.422 114.898C131.55 115.25 131.722 115.546 131.938 115.786C132.154 116.018 132.402 116.194 132.682 116.314C132.97 116.426 133.27 116.482 133.582 116.482C133.99 116.482 134.334 116.422 134.614 116.302C134.902 116.174 135.146 115.994 135.346 115.762C135.394 115.77 135.442 115.798 135.49 115.846C135.538 115.894 135.57 115.938 135.586 115.978C135.522 116.09 135.422 116.218 135.286 116.362C135.158 116.498 134.994 116.626 134.794 116.746C134.594 116.866 134.362 116.966 134.098 117.046C133.834 117.134 133.534 117.178 133.198 117.178C132.798 117.178 132.418 117.11 132.058 116.974C131.706 116.838 131.394 116.634 131.122 116.362C130.858 116.09 130.646 115.758 130.486 115.366C130.334 114.974 130.258 114.518 130.258 113.998C130.258 113.542 130.342 113.114 130.51 112.714C130.678 112.306 130.906 111.95 131.194 111.646C131.49 111.334 131.838 111.09 132.238 110.914C132.638 110.73 133.07 110.638 133.534 110.638C133.918 110.638 134.238 110.694 134.494 110.806C134.75 110.91 134.954 111.038 135.106 111.19C135.266 111.334 135.382 111.486 135.454 111.646C135.526 111.806 135.562 111.934 135.562 112.03ZM142.568 116.554C142.544 116.594 142.504 116.642 142.448 116.698C142.4 116.754 142.344 116.81 142.28 116.866C142.216 116.914 142.144 116.958 142.064 116.998C141.992 117.038 141.924 117.066 141.86 117.082C141.604 117.066 141.388 116.97 141.212 116.794C141.036 116.61 140.94 116.37 140.924 116.074C140.86 116.194 140.764 116.322 140.636 116.458C140.508 116.586 140.352 116.706 140.168 116.818C139.992 116.922 139.788 117.006 139.556 117.07C139.324 117.142 139.072 117.178 138.8 117.178C138.232 117.178 137.78 117.034 137.444 116.746C137.116 116.458 136.952 116.074 136.952 115.594C136.952 115.098 137.14 114.682 137.516 114.346C137.892 114.01 138.536 113.762 139.448 113.602L140.876 113.35V112.882C140.876 112.306 140.74 111.866 140.468 111.562C140.204 111.258 139.808 111.106 139.28 111.106C138.952 111.106 138.672 111.19 138.44 111.358C138.216 111.518 138.104 111.758 138.104 112.078C138.104 112.222 138.152 112.35 138.248 112.462C138.176 112.558 138.06 112.646 137.9 112.726C137.74 112.806 137.576 112.854 137.408 112.87C137.368 112.83 137.32 112.77 137.264 112.69C137.208 112.61 137.18 112.502 137.18 112.366C137.18 112.118 137.252 111.886 137.396 111.67C137.54 111.454 137.728 111.27 137.96 111.118C138.192 110.958 138.46 110.834 138.764 110.746C139.068 110.658 139.384 110.614 139.712 110.614C140.48 110.614 141.024 110.79 141.344 111.142C141.664 111.486 141.824 111.97 141.824 112.594V115.606C141.824 115.934 141.896 116.162 142.04 116.29C142.184 116.41 142.352 116.482 142.544 116.506L142.568 116.554ZM139.184 116.542C139.6 116.542 139.952 116.446 140.24 116.254C140.536 116.062 140.748 115.814 140.876 115.51V113.782L139.268 114.07C138.836 114.15 138.504 114.286 138.272 114.478C138.048 114.67 137.936 114.946 137.936 115.306C137.936 115.706 138.056 116.014 138.296 116.23C138.544 116.438 138.84 116.542 139.184 116.542ZM143.256 111.226C143.32 111.138 143.42 111.058 143.556 110.986C143.7 110.906 143.856 110.866 144.024 110.866H144.408V109.138C144.536 109.034 144.684 108.958 144.852 108.91C145.028 108.854 145.196 108.826 145.356 108.826V110.866H147.708C147.7 111.002 147.66 111.118 147.588 111.214C147.524 111.302 147.44 111.346 147.336 111.346H145.356V115.282C145.356 115.538 145.384 115.746 145.44 115.906C145.504 116.058 145.588 116.178 145.692 116.266C145.796 116.354 145.916 116.414 146.052 116.446C146.188 116.478 146.328 116.494 146.472 116.494C146.736 116.494 146.956 116.442 147.132 116.338C147.308 116.234 147.452 116.126 147.564 116.014C147.676 116.046 147.748 116.114 147.78 116.218C147.74 116.282 147.676 116.366 147.588 116.47C147.5 116.574 147.384 116.678 147.24 116.782C147.096 116.878 146.924 116.962 146.724 117.034C146.524 117.106 146.3 117.142 146.052 117.142C145.828 117.142 145.616 117.114 145.416 117.058C145.216 117.002 145.04 116.91 144.888 116.782C144.744 116.654 144.628 116.482 144.54 116.266C144.452 116.05 144.408 115.782 144.408 115.462V111.346H143.256V111.226ZM150.501 108.85C150.429 108.978 150.317 109.114 150.165 109.258C150.013 109.394 149.877 109.49 149.757 109.546C149.637 109.49 149.501 109.394 149.349 109.258C149.197 109.114 149.081 108.978 149.001 108.85C149.081 108.714 149.197 108.574 149.349 108.43C149.501 108.286 149.637 108.182 149.757 108.118C149.877 108.182 150.013 108.286 150.165 108.43C150.325 108.574 150.437 108.714 150.501 108.85ZM149.253 110.938C149.389 110.866 149.537 110.814 149.697 110.782C149.865 110.75 150.033 110.734 150.201 110.734V116.902C150.089 116.966 149.941 117.01 149.757 117.034C149.581 117.066 149.413 117.082 149.253 117.082V110.938ZM153.004 113.65C153.004 114.154 153.064 114.594 153.184 114.97C153.312 115.346 153.476 115.662 153.676 115.918C153.884 116.166 154.12 116.354 154.384 116.482C154.656 116.61 154.94 116.674 155.236 116.674C155.876 116.674 156.364 116.462 156.7 116.038C157.036 115.606 157.204 114.958 157.204 114.094C157.204 113.678 157.156 113.29 157.06 112.93C156.964 112.57 156.82 112.258 156.628 111.994C156.444 111.73 156.216 111.522 155.944 111.37C155.672 111.218 155.36 111.142 155.008 111.142C154.752 111.142 154.504 111.19 154.264 111.286C154.024 111.382 153.812 111.534 153.628 111.742C153.444 111.942 153.292 112.202 153.172 112.522C153.06 112.834 153.004 113.21 153.004 113.65ZM151.996 114.022C151.996 113.534 152.084 113.082 152.26 112.666C152.436 112.242 152.672 111.882 152.968 111.586C153.272 111.282 153.624 111.046 154.024 110.878C154.432 110.702 154.864 110.614 155.32 110.614C155.816 110.614 156.244 110.698 156.604 110.866C156.972 111.034 157.272 111.258 157.504 111.538C157.744 111.818 157.92 112.146 158.032 112.522C158.152 112.898 158.212 113.294 158.212 113.71C158.212 114.198 158.136 114.654 157.984 115.078C157.832 115.502 157.612 115.874 157.324 116.194C157.044 116.506 156.7 116.754 156.292 116.938C155.884 117.122 155.42 117.214 154.9 117.214C154.516 117.214 154.148 117.142 153.796 116.998C153.444 116.854 153.132 116.646 152.86 116.374C152.596 116.102 152.384 115.77 152.224 115.378C152.072 114.978 151.996 114.526 151.996 114.022ZM164.427 113.254C164.427 112.574 164.287 112.078 164.007 111.766C163.727 111.446 163.331 111.286 162.819 111.286C162.635 111.286 162.451 111.322 162.267 111.394C162.091 111.458 161.919 111.546 161.751 111.658C161.591 111.77 161.439 111.902 161.295 112.054C161.151 112.198 161.023 112.35 160.911 112.51V116.902C160.799 116.966 160.651 117.01 160.467 117.034C160.291 117.066 160.123 117.082 159.963 117.082V110.938C160.227 110.802 160.523 110.734 160.851 110.734V111.922C160.955 111.786 161.087 111.642 161.247 111.49C161.415 111.33 161.599 111.186 161.799 111.058C162.007 110.93 162.231 110.826 162.471 110.746C162.719 110.658 162.983 110.614 163.263 110.614C163.911 110.614 164.423 110.81 164.799 111.202C165.183 111.594 165.375 112.154 165.375 112.882V116.902C165.263 116.966 165.115 117.01 164.931 117.034C164.755 117.066 164.587 117.082 164.427 117.082V113.254Z" fill="black"/>
           </svg>
         </div>
-        <div className={styles.icons}>
-          <svg width="103" height="103" viewBox="0 0 103 103" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M93.5099 40.0335V40.6015C93.5099 40.9355 93.6514 41.2516 93.8971 41.4656L94.9183 42.3556C95.3409 42.7247 95.4298 43.3657 95.1248 43.8458L94.6372 44.6118C94.3716 45.0281 93.981 45.3398 93.5271 45.4979L93.3904 45.5459C93.2361 45.5998 93.0958 45.6903 92.9803 45.8101C92.8649 45.93 92.7774 46.0761 92.7247 46.2371C92.6719 46.398 92.6554 46.5696 92.6763 46.7383C92.6973 46.907 92.7551 47.0684 92.8454 47.21C93.1982 47.7651 93.0069 48.5171 92.4371 48.8151L89.9243 50.1292L90.3288 51.1883C90.4103 51.4034 90.4146 51.6422 90.3406 51.8603C90.2667 52.0784 90.1197 52.261 89.9268 52.3744C89.7339 52.4877 89.5082 52.524 89.2917 52.4766C89.0751 52.4291 88.8824 52.3012 88.7492 52.1164L88.1 51.2103C87.99 51.057 87.8443 50.9356 87.6768 50.8576C87.5093 50.7797 87.3255 50.7478 87.1429 50.7651C86.9604 50.7823 86.785 50.8481 86.6336 50.9561C86.4821 51.0641 86.3596 51.2108 86.2776 51.3823L85.6216 52.7544L85.0365 52.9075M93.5099 40.0335C91.9983 39.9008 90.48 40.1894 89.1089 40.8682C87.7378 41.5469 86.5625 42.5927 85.7023 43.8996C84.8421 45.2064 84.3275 46.7279 84.2106 48.3098C84.0936 49.8917 84.3786 51.4778 85.0365 52.9075M93.5099 40.0335C95.0088 40.1642 96.4488 40.7046 97.6863 41.5989C98.9238 42.4932 99.9156 43.7112 100.563 45.1314C101.21 46.5516 101.49 48.1244 101.375 49.693C101.26 51.2617 100.753 52.7713 99.9065 54.0715L99.7373 53.5425C99.5944 53.0945 99.3203 52.7048 98.954 52.4288C98.5876 52.1527 98.1474 52.0043 97.6959 52.0044H97.0954L96.7856 51.6804C96.63 51.5173 96.4396 51.3953 96.23 51.3244C96.0205 51.2535 95.7978 51.2358 95.5804 51.2726C95.3629 51.3094 95.157 51.3998 94.9795 51.5362C94.8021 51.6727 94.6582 51.8513 94.5597 52.0574L94.5253 52.1304C94.4314 52.327 94.2995 52.5011 94.1378 52.6416C93.9762 52.7821 93.7884 52.8859 93.5864 52.9465L92.6398 53.2285C92.1139 53.3855 91.785 53.9305 91.8749 54.4956L91.9447 54.9336C92.0212 55.4077 92.4132 55.7547 92.8721 55.7547C93.681 55.7547 94.4 56.2967 94.6553 57.0998L94.8609 57.7428M85.0365 52.9075C85.8936 54.7714 87.3383 56.2697 89.1276 57.1504C90.9168 58.031 92.9415 58.2402 94.8609 57.7428M94.8609 57.7428C96.9166 57.2094 98.7124 55.9029 99.9056 54.0725M96.3783 46.0039C96.3783 46.9 96.0026 47.7041 95.4069 48.2541" stroke="#1057B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M62.1935 5.50035C62.1935 3.01516 60.1866 1 57.7111 1C55.861 1 54.2718 2.12609 53.5882 3.73321C52.9045 2.12609 51.3154 1 49.4643 1C46.9908 1 44.9828 3.01516 44.9828 5.50035C44.9828 12.7209 53.5882 17.5013 53.5882 17.5013C53.5882 17.5013 62.1935 12.7209 62.1935 5.50035Z" stroke="#1057B3" strokew="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M44.0267 99.2575C49.1283 99.2531 54.2078 99.9597 59.131 101.359C59.8261 101.557 60.5203 101.017 60.5203 100.263V99.2575M45.4609 85.0063V85.7564C45.4609 85.9553 45.3854 86.1461 45.2509 86.2868C45.1164 86.4274 44.934 86.5065 44.7438 86.5065H44.0267M44.0267 86.5065V86.1314C44.0267 85.5104 44.5086 85.0063 45.1024 85.0063H61.2374M44.0267 86.5065V95.5072M61.2374 85.0063V85.7564C61.2374 86.1704 61.5586 86.5065 61.9545 86.5065H62.6716M61.2374 85.0063H61.5959C62.1897 85.0063 62.6716 85.5104 62.6716 86.1314V95.8822C62.6716 96.5032 62.1897 97.0073 61.5959 97.0073H61.2374M44.0267 95.5072V95.8822C44.0267 96.1806 44.14 96.4668 44.3418 96.6777C44.5435 96.8887 44.8171 97.0073 45.1024 97.0073H45.4609M44.0267 95.5072H44.7438C44.934 95.5072 45.1164 95.5862 45.2509 95.7268C45.3854 95.8675 45.4609 96.0583 45.4609 96.2572V97.0073M61.2374 97.0073V96.2572C61.2374 96.0583 61.3129 95.8675 61.4474 95.7268C61.5819 95.5862 61.7643 95.5072 61.9545 95.5072H62.6716M61.2374 97.0073H45.4609M56.2176 91.0068C56.2176 91.8025 55.9154 92.5656 55.3774 93.1283C54.8395 93.691 54.1099 94.007 53.3491 94.007C52.5884 94.007 51.8588 93.691 51.3208 93.1283C50.7829 92.5656 50.4807 91.8025 50.4807 91.0068C50.4807 90.2111 50.7829 89.448 51.3208 88.8853C51.8588 88.3227 52.5884 88.0066 53.3491 88.0066C54.1099 88.0066 54.8395 88.3227 55.3774 88.8853C55.9154 89.448 56.2176 90.2111 56.2176 91.0068ZM59.086 91.0068H59.0937V91.0148H59.086V91.0068ZM47.6123 91.0068H47.6199V91.0148H47.6123V91.0068Z" stroke="#1057B3" strokew="1.5" strokeLinecap="round"strokeLinejoin="round"/>
-            <path d="M5.1908 51.2541C5.96146 51.2541 6.65658 50.808 7.13274 50.174C7.87496 49.1835 8.80668 48.366 9.86828 47.7738C10.5596 47.3898 11.1591 46.8177 11.4488 46.0587C11.6523 45.5269 11.7568 44.9593 11.7567 44.3865V43.7535C11.7567 43.5545 11.8322 43.3638 11.9667 43.2231C12.1012 43.0824 12.2836 43.0034 12.4738 43.0034C13.0444 43.0034 13.5916 43.2405 13.995 43.6625C14.3985 44.0845 14.6251 44.6568 14.6251 45.2536C14.6251 46.4057 14.3765 47.4968 13.9338 48.4718C13.6795 49.0299 14.0361 49.7539 14.627 49.7539M14.627 49.7539H17.616C18.597 49.7539 19.4757 50.448 19.5799 51.4691C19.6229 51.8911 19.6449 52.3191 19.6449 52.7542C19.6489 55.4907 18.7548 58.1458 17.1121 60.2758C16.7411 60.7578 16.1683 61.0048 15.5774 61.0048H11.7376C11.2757 61.0048 10.8158 60.9268 10.377 60.7748L7.39951 59.7347C6.96073 59.5821 6.50131 59.5044 6.03891 59.5047H4.49377M14.627 49.7539H12.4738M4.49377 59.5047C4.57313 59.7097 4.65918 59.9097 4.75193 60.1067C4.94029 60.5068 4.67735 61.0048 4.25187 61.0048H3.38368C2.53367 61.0048 1.7458 60.4868 1.49816 59.6367C1.16699 58.4999 0.999106 57.3179 1 56.1294C1 54.5763 1.28207 53.0932 1.79456 51.7311C2.08714 50.957 2.83294 50.504 3.62941 50.504H4.63624C5.08754 50.504 5.34857 51.06 5.11431 51.4641C4.29766 52.8701 3.86694 54.4843 3.86941 56.1294C3.86941 57.3235 4.09123 58.4626 4.49473 59.5047H4.49377Z" stroke="#1057B3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
+        
         <div className={styles.upper_text}>
           <svg width="360" height="363" viewBox="0 0 360 363" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M107.912 46.4655C107.879 46.5767 107.809 46.6988 107.701 46.8318C107.598 46.971 107.489 47.0896 107.373 47.1877C106.961 46.9804 106.518 46.7419 106.044 46.4721C105.571 46.191 105.096 45.9012 104.619 45.6027C104.143 45.2928 103.678 44.9839 103.224 44.676C102.772 44.3568 102.358 44.0467 101.983 43.7457C102.082 43.4523 102.269 43.1895 102.544 42.9572C102.839 43.2111 103.174 43.4773 103.551 43.7556C103.923 44.0278 104.32 44.3051 104.742 44.5874C105.164 44.8697 105.598 45.1473 106.044 45.4203C106.484 45.6871 106.917 45.9446 107.342 46.193C107.209 45.7709 107.061 45.3359 106.897 44.8882C106.727 44.4343 106.552 43.9856 106.37 43.5421C106.189 43.0985 106.001 42.6658 105.806 42.2439C105.606 41.8158 105.409 41.4165 105.216 41.046C105.268 40.8968 105.346 40.7582 105.447 40.6303C105.549 40.5025 105.652 40.3947 105.756 40.3069C106.056 40.5557 106.401 40.8198 106.789 41.0991C107.184 41.3733 107.597 41.652 108.031 41.9353C108.459 42.2124 108.895 42.4875 109.341 42.7604C109.787 43.0221 110.224 43.2714 110.65 43.5085C110.507 43.074 110.34 42.6289 110.148 42.173C109.962 41.712 109.762 41.2582 109.546 40.8117C109.337 40.3601 109.118 39.9274 108.889 39.5139C108.66 39.089 108.437 38.696 108.22 38.3348C108.311 38.1432 108.445 37.9726 108.622 37.8229C108.726 37.7351 108.801 37.6819 108.848 37.6632C109.064 38.0984 109.278 38.5619 109.489 39.0537C109.707 39.5403 109.914 40.0459 110.111 40.5707C110.314 41.0902 110.502 41.6171 110.676 42.1511C110.855 42.68 111.019 43.2018 111.166 43.7164C111.133 43.8276 111.06 43.9522 110.946 44.0904C110.837 44.2348 110.731 44.3508 110.627 44.4386C110.286 44.266 109.921 44.0714 109.533 43.8548C109.151 43.633 108.761 43.402 108.364 43.1618C107.972 42.9164 107.584 42.6684 107.199 42.4179C106.809 42.1612 106.438 41.9034 106.088 41.6445C106.246 41.9719 106.409 42.3369 106.577 42.7393C106.745 43.1418 106.909 43.5582 107.069 43.9884C107.229 44.4187 107.381 44.8454 107.525 45.2685C107.669 45.6916 107.798 46.0906 107.912 46.4655Z" fill="black"/>
@@ -392,93 +350,75 @@ export default function IkigaiMap() {
           </svg>
         </div>
         </div>
-        {/* <div className={styles.edit}>
+        <div className={styles.edit}>
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="27"  fill="none" stroke="currentColor" >
           <path stroke="#5591DF" strokeWidth="1.5"  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
         </svg>
-        </div> */}
-        {/* <div className={styles.change_page}> */}
-          {/* <div className="previous">
+        </div>
+        <div className={styles.change_page}>
+          <div className="previous">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none"  width="25" height="27"  >
               <path stroke="#5591DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"  d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
             </svg>
-          </div> */}
-          <div className="next" style={{ display: "flex", alignItems: "center", gap: "8px", color: "#1057B2" }}>next 
+          </div>
+          <div className="next">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none"  width="25" height="27" >
               <path stroke="#5591DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"  d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" onClick={() => navigate("/explore")}/>
             </svg>
           </div>
-        {/* </div> */}
+        </div>
         
          {/* Modal Rendering */}
+          {/* Overlay */}
       <div className={`overlay ${isModalOpen ? '' : 'hidden'}`} onClick={closeModal}></div>
-      {isModalOpen && modal && (
-        <div className={styles.modal}>
-          <h2>{modal}</h2>
-          <div>
-            {Object.keys(questions[modal]).map(
-              (subsection, index) =>
-                subsection !== 'conclusion' && (
-                  <div key={index}>
-                    <label>{questions[modal][subsection]}</label> <br />
-                    <input
-                      type="text"
-                      onChange={(e) => handleText(modal, subsection, e.target.value)}
-                      value={circleInput.data?.[modal]?.[subsection] || ''}  // Safe access with fallback
-                    />
-                  </div>
-                )
-            )}
-            <label>{questions[modal].conclusion}</label> <br />
+
+{/* Modal */}
+{isModalOpen && modal && (
+  <div className={styles.modal}>
+    <h2>{modal}</h2>
+    <div>
+      {/* Render Questions */}
+      {Object.keys(questions[modal]).map((subsection, index) => (
+        subsection !== 'conclusion' && (
+          <div key={index}>
+            <label>{questions[modal][subsection]}</label> <br />
             <input
               type="text"
-              onChange={(e) => handleConclusion(modal, e.target.value)}
-              value={circleInput[modal].conclusion}
+              onChange={(e) => handleText(modal, subsection, e.target.value)}
+              value={circleInput[modal][subsection]}
             />
           </div>
-          <div className={styles.modal_footer}>
-            <button
-              className={styles.switch_button}
-              onClick={() => {
-                const sections = [
-                  'What you love',
-                  'What the world needs',
-                  'What you can be paid for',
-                  'What you are good at',
-                ];
-                const currentIndex = sections.indexOf(modal);
-                const nextIndex = (currentIndex + 1) % sections.length;
-                setModal(sections[nextIndex]);
-              }}
-            >
-              Switch Circle
-            </button>
-            {allCirclesComplete && (
-              <button className={styles.complete_button} onClick={handleComplete}>
-                Complete
-              </button>
-            )}
-          </div>
-          <div className={styles.close_button}>
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={closeModal}
-            >
-              <path
-                d="M1 11L11 1M1 1L11 11"
-                stroke="#E55430"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
-      )}
+        )
+      ))}
+      {/* Conclusion */}
+      <label>{questions[modal].conclusion}</label> <br />
+      <input
+        type="text"
+        onChange={(e) => handleConclusion(modal, e.target.value)}
+        value={circleInput[modal].conclusion}/>
+        <span className={styles.submitButton} type="submit">
+          <svg
+            width="20"
+            height="19"
+            viewBox="0 0 20 19"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19 5.5C19 3.015 16.901 1 14.312 1C12.377 1 10.715 2.126 10 3.733C9.285 2.126 7.623 1 5.687 1C3.1 1 1 3.015 1 5.5C1 12.72 10 17.5 10 17.5C10 17.5 19 12.72 19 5.5Z"
+              stroke="#5591DF"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"/>
+          </svg>
+        </span>
     </div>
-  );
+    <div className={styles.close_button}>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 11L11 1M1 1L11 11" stroke="#E55430" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" onClick={closeModal}/>
+      </svg>
+    </div>
+  </div>
+)}
+</div>
+);
 }
