@@ -13,11 +13,12 @@ function Login() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.login_container}>
-        <span className={styles.title}>Ikiga-i</span> <br />
-        <span>Log in</span>
-        <br />
-        <form onSubmit={handleLogin}>
+       <div><span className={styles.title}>Ikiga-i</span></div>
+        <div className={styles.login_title}> 
+          <span className={styles.subtitle}>Log in</span>
+        </div>
+         <div className={styles.login_container}>
+           <form onSubmit={handleLogin}>
           <label htmlFor="email">Email</label> <br />
           <input
             id="email"
@@ -33,19 +34,24 @@ function Login() {
             type="password"
             placeholder="Enter your password"
           />{" "}
-          <br />
-          <br />
-          <button type="submit">Log In</button> <br />
+          <div ><button type="submit" className={styles.login_button}>Log In</button></div>
         </form>
       </div>
       <div className={styles.alternative}>
-        <img src="" alt={styles.leftLine} />
+        <div className={styles.line}>
+          <svg width="112" height="1" viewBox="0 0 112 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line y1="0.5" x2="112" y2="0.5" stroke="#D9D9D9"/>
+          </svg>
+        </div>
         <p>or</p> 
-        <img src="" alt={styles.rightLine} />
-
+        <div className={styles.line}>
+          <svg width="112" height="1" viewBox="0 0 112 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line y1="0.5" x2="112" y2="0.5" stroke="#D9D9D9"/>
+          </svg>
+        </div>
       </div>
-      <div className={styles.signUp}>
-        <button className={styles.signUp} onClick={() => navigate("/signup")}>Sign Up</button>{" "}<br />
+      <div className={styles.signup_container}>
+        <button  className={styles.signup_button} onClick={() => navigate("/signup")}>Sign Up</button>{" "}<br />
         <p className={styles.createAccount}>to create an account</p>
       </div>
     </div>

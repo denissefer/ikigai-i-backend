@@ -12,8 +12,13 @@ function IkigaiDescription (){
             <p>Ikigai is a Japanese concept that translates to "reason for being."</p>
             <p>It represents the intersection of four elements: what you love, what you are good at, what the world needs, and what you can be paid for.</p>
             <p>Finding your ikigai brings purpose, fulfillment, and balance to life, blending passion, mission, vocation, and profession into a harmonious existence.</p>
-            </div> <br /><br />
-            <button onClick={()=>navigate("/login")}>continue</button>
+            </div> 
+            <div>
+            <button className={styles.button} onClick={()=>navigate("/login")}>
+                Continue
+            </button>
+            </div>
+            
         </div>
 
     )
