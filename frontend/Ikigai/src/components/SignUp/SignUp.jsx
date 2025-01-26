@@ -32,6 +32,11 @@ export default function SignUp() {
         <div className={styles.signup_container}>
             <button  className={styles.signup_button} onClick={() => navigate("/signup")}>Sign Up</button>{" "}
         </div>
+        <div className={styles.previous} onClick={() => navigate("/login")}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none"  width="25" height="27"  >
+              <path stroke="#D9D9D9" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"  d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+            </svg>
+          </div>
       </form>
     </div>
   );

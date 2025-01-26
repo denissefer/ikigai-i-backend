@@ -19,21 +19,15 @@ function Login() {
         </div>
          <div className={styles.login_container}>
            <form onSubmit={handleLogin}>
-          <label htmlFor="email">Email</label> <br />
+          <div className={styles.email}>
+              <label htmlFor="email">Email</label> <br />
+              <input id="email" className={styles.email_container} type="text" placeholder="Enter your email"/>{" "}
+          </div>
+          <div className={styles.password_container}>
+          <label htmlFor="password">Password</label>  <br />
           <input
-            id="email"
-            className={styles.email}
-            type="text"
-            placeholder="Enter your email"/>{" "}
-          <br />
-          <br />
-          <label htmlFor="password">Password</label> <br />
-          <input
-            id="password"
-            className={styles.password}
-            type="password"
-            placeholder="Enter your password"
-          />{" "}
+            id="password" className={styles.password} type="password" placeholder="Enter your password"/>{" "}
+          </div>
           <div ><button type="submit" className={styles.login_button}>Log In</button></div>
         </form>
       </div>
@@ -43,7 +37,7 @@ function Login() {
             <line y1="0.5" x2="112" y2="0.5" stroke="#D9D9D9"/>
           </svg>
         </div>
-        <p>or</p> 
+        <p className={styles.or}>or</p> 
         <div className={styles.line}>
           <svg width="112" height="1" viewBox="0 0 112 1" fill="none" xmlns="http://www.w3.org/2000/svg">
             <line y1="0.5" x2="112" y2="0.5" stroke="#D9D9D9"/>

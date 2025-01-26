@@ -32,13 +32,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
 }
 
 .login_button{
-    margin-top: 20px;
-    margin-left: 85px;
-    background-color: #616161;
+    margin-top: 10px;
+    margin-left: 80px;
+    background-color: #7a7a7a;;
     color: white;
     font-size: 14px;
     border: none;
@@ -69,13 +73,17 @@ input{
     justify-content: center;
 }
 
+.or{
+    margin-top: 10px;
+}
+
 .line{
-    padding-top: 30px;
+    margin-top: 20px;
 }
 
 
 .signup_container{
-    margin-top: 30px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,7 +91,7 @@ input{
 
 
 .signup_button{
-background-color: #616161;
+background-color: #7a7a7a;;
 color: white;
 font-size: 14px;
 border: none;
@@ -98,4 +106,8 @@ padding-bottom: 6px;
 
 .signup_button:hover {
     transform: scale(1.05);
+}
+
+.createAccount{
+    margin-top: 10px;
 }

@@ -38,7 +38,7 @@ form{
 }
 
 .signup_button{
-background-color: #616161;
+background-color: #7a7a7a;;
 color: white;
 font-size: 14px;
 border: none;
@@ -48,3 +48,4 @@ transition: transform 0.2s, background-color 0.2s;
 padding: 5px 10px;
 padding-bottom: 6px;
 }
+

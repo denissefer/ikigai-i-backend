@@ -20,7 +20,7 @@ function Welcome (){
                     <ellipse cx="19.3178" cy="32.8924" rx="19.3178" ry="19.1089" fill="#5591DF" fillOpacity="0.5"/>
                 </svg>
                 </div>
-                <button className={styles.startButton} onClick={()=> navigate('/ikigaiDescription')}>Get Started</button>
+                <button className={styles.startButton} onClick={()=> navigate('/ikigaiDescription')}>Get tarted</button>
             </div>
         </div>
     )
