@@ -12,7 +12,7 @@
     font-size: 100px;
     position: absolute;
     font-size: 2rem;
-    color: rgb(71, 101, 185);
+    color: rgb(52, 52, 53);
     opacity: 0;
     animation: fadeIn 1s forwards, dissolve 1s 3s forwards;
     padding: 80px;

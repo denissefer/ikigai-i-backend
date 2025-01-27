@@ -17,7 +17,7 @@
   align-items: center;
   position: relative;
   flex-direction: column;
-  font-family: "tsukimi rounded";
+  font-family: "Tsukimi rounded";
 
 }
 
@@ -58,7 +58,7 @@
     z-index: 1;
 }
 
-.icons{
+.red_icons{
     position: absolute;
     z-index: 1; 
     margin-right: 3px;
@@ -75,13 +75,8 @@
 }
 
 .change_page{
-    margin-top: 20px;
-    min-width: 300px;
-    max-width:  500px;
     margin-top: 0px;
-    display: flex;
-    justify-content: space-between;
-    
+    display: flex;  
 }
 
 
@@ -107,7 +102,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+    background: rgba(177, 201, 238, 0.3); /* Semi-transparent black */
     backdrop-filter: blur(5px);    /* Apply blur effect */
     z-index: 10;
   }
@@ -181,3 +176,13 @@
     animation:upper_text 1.67s ease-in-out 3; /* 3 pulses in 5 seconds */
     animation-fill-mode: forwards; /* Retain the final state */
   }
+
+  input{
+    width: 219px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(235, 235, 235);
+    padding: 10px;
+}
+
