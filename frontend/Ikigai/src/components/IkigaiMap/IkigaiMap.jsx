@@ -369,7 +369,7 @@ const questions = {
         
          {/* Modal Rendering */}
           {/* Overlay */}
-      <div className={`overlay ${isModalOpen ? '' : 'hidden'}`} onClick={closeModal}></div>
+      <div className={`${styles.overlay} ${isModalOpen ? '' : styles.hidden}`} onClick={closeModal}></div>
 
 {/* Modal */}
 {isModalOpen && modal && (
