@@ -9,14 +9,16 @@ require('dotenv').config();
 const app = express();
 const PORT = 3000;
 
-app.use(cors({ origin: 'http://localhost:5176', methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
+app.use(cors({ origin: /http:\/\/localhost:\d{4}/, methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
+
+
 app.use(bodyParser.json());
 
 // Connect to MySQL
 const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'sslazio1',
+  password: '',
   database: 'ikigai_database',
 });
 
@@ -36,27 +38,37 @@ app.get('/', async (req, res) => {
 app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
-  // Validate that all necessary fields are provided
+  console.log('Received data:', req.body); // Логирање на добиените податоци
+
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email, and password are required.' });
   }
 
   try {
-    // Hash the password using bcrypt
-    const passwordHash = await bcrypt.hash(password, 10);  // Hash the password
+    // Проверка дали веќе постои корисник со ист username или email
+    const [existingUser] = await db.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email]);
 
-    // Insert the new user into the database
+    if (existingUser.length > 0) {
+      return res.status(400).json({ error: 'Username or email already exists' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log('Password hashed:', passwordHash); // Логирање на хашираната лозинка
+
     const [result] = await db.query(
       'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
       [username, email, passwordHash]
     );
 
+    console.log('User added:', result);  // Логирање на резултатот од базата
+
     res.status(201).json({ message: 'User registered successfully!', userId: result.insertId });
   } catch (err) {
-    console.error('Error registering user:', err);
+    console.error('Error registering user:', err);  // Логирање на грешката
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
+
 
 // Login route
 app.post('/login', async (req, res) => {
